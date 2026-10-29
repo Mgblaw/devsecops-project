@@ -1,0 +1,21 @@
+name: DevSecOps Security Pipeline
+
+on:
+  push:
+
+jobs:
+  security-scans:
+     runs-on: ubuntu-latest
+     steps:
+       - name: Checkout code
+         uses: actions/checkout@v4
+       
+       - name:  Build Docker image
+         run:  docker build -t devsecops-app .
+       - name: Scan Docker image with Trivy
+       - uses: aquasecurity/trivy-action@0.33.1
+         with: 
+           image-ref: devsecops-app
+           format: table
+           severity: HIGH,CRITICAL
+           exit-code: '1'
